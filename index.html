@@ -133,7 +133,7 @@
           </div>
           <div class="form-group">
             <label for="reg-password">Kata Sandi <span class="req">*</span></label>
-            <input type="password" id="reg-password" class="form-control" placeholder="Minimal 4 karakter" required maxlength="40" autocomplete="new-password">
+            <input type="password" id="reg-password" class="form-control" placeholder="Minimal 8 karakter" required minlength="8" maxlength="72" autocomplete="new-password">
           </div>
           <div class="form-group">
             <label id="reg-char-label">Karakter petualang</label>
@@ -1043,6 +1043,8 @@
   </div> <!-- /#app -->
 
   <script src="icons.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
   <script src="script.js"></script>
 </body>

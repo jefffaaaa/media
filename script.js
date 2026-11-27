@@ -1127,6 +1127,27 @@ class AppState {
     }
   }
 
+  async loadRemoteStudent() {
+    if (!Auth.current() || !Auth.userId) return;
+    try {
+      const remote = await Auth.loadProgress();
+      if (remote && typeof remote === 'object') {
+        this.student = remote;
+        if (!this.student.characterId) this.student.characterId = 'robo';
+        if (this.student.hearts === undefined || this.student.hearts === null) this.student.hearts = NYAWA_AWAL;
+        if (!Array.isArray(this.student.bonusLevelsGiven)) this.student.bonusLevelsGiven = [];
+        if (!this.student.zoneProgress) this.student.zoneProgress = {};
+        if (!this.student.passedLevels) this.student.passedLevels = [];
+        if (!this.student.stars) this.student.stars = {};
+        if (!this.student.levelScores) this.student.levelScores = {};
+        if (this.student.totalPoints === undefined) this.student.totalPoints = 0;
+        localStorage.setItem(Auth.studentKey(Auth.current()), JSON.stringify(this.student));
+      }
+    } catch (err) {
+      console.error('Gagal memuat progres dari Supabase:', err.message);
+    }
+  }
+
   ensureStudent() {
     const user = Auth.current();
     if (!user) return false;
@@ -1163,6 +1184,8 @@ class AppState {
     const user = Auth.current();
     if (this.student && user) {
       localStorage.setItem(Auth.studentKey(user), JSON.stringify(this.student));
+      // Simpan ke cloud tanpa menghambat animasi/permainan.
+      Auth.saveProgress(this.student);
     }
   }
 
@@ -4705,7 +4728,7 @@ const UI = {
 
   showScreen(screenId) {
     if (this.protectedScreens.includes(screenId) && !state.ensureStudent()) {
-      this.openAuth(Object.keys(Auth.accounts()).length ? 'login' : 'register', 'Masuk dulu untuk memulai petualangan.');
+      this.openAuth('login', 'Masuk dulu untuk memulai petualangan.');
       return;
     }
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -5576,7 +5599,7 @@ function initEventListeners() {
         UI.updateMenuScreen();
         UI.showScreen('screen-menu');
       } else {
-        UI.openAuth(Object.keys(Auth.accounts()).length ? 'login' : 'register');
+        UI.openAuth('login');
       }
     });
   }
@@ -5601,12 +5624,16 @@ function initEventListeners() {
     });
   });
 
-  document.getElementById('form-login').addEventListener('submit', (e) => {
+  document.getElementById('form-login').addEventListener('submit', async (e) => {
     e.preventDefault();
     sound.click();
-    const r = Auth.login(val('login-username'), val('login-password'));
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    const r = await Auth.login(val('login-username'), val('login-password'));
+    if (submitBtn) submitBtn.disabled = false;
     if (!r.ok) return authErr(r.error);
     state.loadStudent();
+    await state.loadRemoteStudent();
     state.ensureStudent();
     e.target.reset();
     UI.updateMenuScreen();
@@ -5634,7 +5661,7 @@ function initEventListeners() {
   });
   pickRegChar(regChar);
 
-  document.getElementById('form-register').addEventListener('submit', (e) => {
+  document.getElementById('form-register').addEventListener('submit', async (e) => {
     e.preventDefault();
     sound.click();
     const nama = val('reg-nama');
@@ -5642,11 +5669,14 @@ function initEventListeners() {
       return authErr('Nama hanya boleh huruf, angka, spasi, titik, petik, atau strip (2-50 karakter).');
     }
     const f = { nama, kelas: val('reg-kelas'), absen: val('reg-absen'), username: val('reg-username'), password: val('reg-password') };
-    const r = Auth.register(f);
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    const r = await Auth.register(f);
+    if (submitBtn) submitBtn.disabled = false;
     if (!r.ok) return authErr(r.error);
-    Auth.login(f.username, f.password);
     Auth.claimLegacy(f.username, f.nama, f.kelas);
     state.loadStudent();
+    await state.loadRemoteStudent();
     state.ensureStudent();
     state.student.characterId = regChar;
     state.saveStudent();
@@ -5730,9 +5760,9 @@ function initEventListeners() {
 
   const menuLogoutBtn = document.getElementById('btn-menu-logout');
   if (menuLogoutBtn) {
-    menuLogoutBtn.addEventListener('click', () => {
+    menuLogoutBtn.addEventListener('click', async () => {
       sound.click();
-      Auth.logout();
+      await Auth.logout();
       state.student = null;
       UI.showScreen('screen-home');
     });
@@ -6321,6 +6351,18 @@ function escapeHtml(str) {
 
 // Inisialisasi Aplikasi Saat Halaman Dimuat
 document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    await Auth.init();
+    state.loadStudent();
+    await state.loadRemoteStudent();
+  } catch (err) {
+    console.error('Inisialisasi Supabase EDUEST gagal:', err);
+    const msg = document.getElementById('auth-error');
+    if (msg) {
+      msg.textContent = 'Koneksi layanan akun belum siap. Periksa konfigurasi Supabase dan koneksi internet.';
+      msg.classList.remove('hidden');
+    }
+  }
   await EduestImageStore.init();
   TeacherController.setupQuestionEditorImageHandlers();
   initEventListeners();
