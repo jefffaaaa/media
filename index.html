@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0c1f2b">
+  <title>EDUEST - Belajar Sambil Berpetualang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <!-- Canvas Confetti Overlay -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Sound Toggle Button (Floating Top Right for Menus) -->
+  <div class="sound-floating-ctrl" id="sound-floating-ctrl">
+    <button id="btn-sound-toggle" class="icon-btn-round" title="Nyalakan / Matikan Suara" aria-label="Toggle Sound">
+      <span id="sound-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></span>
+    </button>
+  </div>
+
+  <div id="app" class="app-container">
+    <aside id="sidebar" class="sidebar" aria-label="Navigasi utama">
+      <div class="sb-brand"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><b>EDUEST</b></div>
+      <nav class="sb-nav">
+        <button type="button" class="sb-item" data-nav="screen-menu" title="Dasbor"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg><span>Dasbor</span></button>
+        <div class="sb-row">
+          <button type="button" class="sb-item" data-nav="screen-materials" title="Materi"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20"/></svg><span>Materi</span></button>
+          <button type="button" id="sb-toggle" class="sb-toggle" aria-expanded="false" aria-controls="sb-chapters" aria-label="Tampilkan daftar bab" title="Daftar bab"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+        <div id="sb-chapters" class="sb-group" hidden>
+          <div id="sidebar-chapters" class="sb-chapters"></div>
+        </div>
+        <button type="button" class="sb-item" data-nav="screen-world" title="Game"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 10.5v4M5 12.5h4M16 11.5h.01M18.5 14h.01"/></svg><span>Game</span></button>
+        <button type="button" class="sb-item" data-nav="screen-leaderboard" title="Peringkat"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg><span>Peringkat</span></button>
+      </nav>
+      <div class="sb-spacer"></div>
+      <div class="sb-profile">
+        <div class="sb-avatar" id="sb-avatar" data-keep-emoji>S</div>
+        <div class="sb-profile-info"><b id="sb-name">Siswa</b><small id="sb-class">X TJKT 1</small></div>
+        <button type="button" id="sb-logout" class="sb-logout" title="Keluar" aria-label="Keluar"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
+      </div>
+    </aside>
+
+
+    <!-- ==========================================
+         BAGIAN 1: HALAMAN UTAMA (HERO / HOME)
+    =========================================== -->
+    <section id="screen-home" class="screen active">
+      <div class="home-wrapper">
+        <header class="home-header">
+          <div class="subject-badge">
+            <span class="badge-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg></span>
+            <span>Informatika / Sistem Komputer &bull; Kelas X TJKT (Fase E)</span>
+          </div>
+          <div class="logo-box">
+            <div class="logo-mascot"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg></div>
+            <h1 class="logo-title">EDUEST</h1>
+            <p class="logo-tagline">Belajar Sambil Berpetualang &bull; Level demi Level</p>
+          </div>
+        </header>
+
+        <div class="home-illustration-card"><svg class="hero-panel" viewBox="0 0 480 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="20" y="250" width="440" height="130" rx="8" fill="#123445" stroke="#2c6178" stroke-width="2"/><text x="38" y="372" font-family="Chakra Petch,sans-serif" font-size="14" font-weight="600" fill="#a9c4d1">Switch TJKT-01</text><rect x="40" y="292" width="40" height="36" rx="3" fill="#07161e" stroke="#2c6178" stroke-width="2"/><path d="M47 312h26" stroke="#c9a24a" stroke-width="8" stroke-dasharray="2 2"/><circle class="led" style="--d:1.4s" cx="72" cy="284" r="4" fill="#f28c28"/><text x="60" y="350" text-anchor="middle" font-family="Lexend,sans-serif" font-size="11" fill="#a9c4d1">1</text><rect x="92" y="292" width="40" height="36" rx="3" fill="#07161e" stroke="#2c6178" stroke-width="2"/><path d="M99 312h26" stroke="#c9a24a" stroke-width="8" stroke-dasharray="2 2"/><circle class="led" style="--d:1.52s" cx="124" cy="284" r="4" fill="#3f8fe8"/><text x="112" y="350" text-anchor="middle" font-family="Lexend,sans-serif" font-size="11" fill="#a9c4d1">2</text><rect x="144" y="292" width="40" height="36" rx="3" fill="#07161e" stroke="#2c6178" stroke-width="2"/><path d="M151 312h26" stroke="#c9a24a" stroke-width="8" stroke-dasharray="2 2"/><circle class="led" style="--d:1.64s" cx="176" cy="284" r="4" fill="#b9814f"/><text x="164" y="350" text-anchor="middle" font-family="Lexend,sans-serif" font-size="11" fill="#a9c4d1">3</text><rect x="196" y="292" width="40" height="36" rx="3" fill="#07161e" stroke="#2c6178" stroke-width="2"/><path d="M203 312h26" stroke="#c9a24a" stroke-width="8" stroke-dasharray="2 2"/><circle class="led" style="--d:1.7599999999999998s" cx="228" cy="284" r="4" fill="#3fc274"/><text x="216" y="350" text-anchor="middle" font-family="Lexend,sans-serif" font-size="11" fill="#a9c4d1">4</text><rect x="248" y="292" width="40" height="36" rx="3" fill="#07161e" stroke="#2c6178" stroke-width="2"/><path d="M255 312h26" stroke="#c9a24a" stroke-width="8" stroke-dasharray="2 2"/><circle class="led" style="--d:1.88s" cx="280" cy="284" r="4" fill="#f28c28"/><text x="268" y="350" text-anchor="middle" font-family="Lexend,sans-serif" font-size="11" fill="#a9c4d1">5</text><rect x="300" y="292" width="40" height="36" rx="3" fill="#07161e" stroke="#2c6178" stroke-width="2"/><path d="M307 312h26" stroke="#c9a24a" stroke-width="8" stroke-dasharray="2 2"/><circle class="led" style="--d:2.0s" cx="332" cy="284" r="4" fill="#3f8fe8"/><text x="320" y="350" text-anchor="middle" font-family="Lexend,sans-serif" font-size="11" fill="#a9c4d1">6</text><rect x="352" y="292" width="40" height="36" rx="3" fill="#07161e" stroke="#2c6178" stroke-width="2"/><path d="M359 312h26" stroke="#c9a24a" stroke-width="8" stroke-dasharray="2 2"/><circle class="led" style="--d:2.12s" cx="384" cy="284" r="4" fill="#b9814f"/><text x="372" y="350" text-anchor="middle" font-family="Lexend,sans-serif" font-size="11" fill="#a9c4d1">7</text><rect x="404" y="292" width="40" height="36" rx="3" fill="#07161e" stroke="#2c6178" stroke-width="2"/><path d="M411 312h26" stroke="#c9a24a" stroke-width="8" stroke-dasharray="2 2"/><circle class="led" style="--d:2.2399999999999998s" cx="436" cy="284" r="4" fill="#3fc274"/><text x="424" y="350" text-anchor="middle" font-family="Lexend,sans-serif" font-size="11" fill="#a9c4d1">8</text><path class="cable" style="--d:0.0s" d="M70 -10C70 150 60 150 60 276" fill="none" stroke="#f28c28" stroke-width="8" stroke-linecap="round"/><rect x="50" y="264" width="20" height="30" rx="3" fill="#dbe6ec"/><path class="cable" style="--d:0.18s" d="M190 -10C190 150 164 150 164 276" fill="none" stroke="#3f8fe8" stroke-width="8" stroke-linecap="round"/><rect x="154" y="264" width="20" height="30" rx="3" fill="#dbe6ec"/><path class="cable" style="--d:0.36s" d="M320 -10C320 150 268 150 268 276" fill="none" stroke="#b9814f" stroke-width="8" stroke-linecap="round"/><rect x="258" y="264" width="20" height="30" rx="3" fill="#dbe6ec"/><path class="cable" style="--d:0.54s" d="M430 -10C430 150 372 150 372 276" fill="none" stroke="#3fc274" stroke-width="8" stroke-linecap="round"/><rect x="362" y="264" width="20" height="30" rx="3" fill="#dbe6ec"/></svg></div>
+
+
+        <div class="home-actions">
+          <button id="btn-home-start" class="btn btn-primary btn-3d btn-xl">Mulai petualangan</button>
+          
+          <div class="home-secondary-actions">
+            <button id="btn-home-leaderboard" class="btn btn-secondary btn-3d">Papan Peringkat</button>
+            <button id="btn-open-teacher-login" class="btn btn-teacher-entry">Panel Guru</button>
+          </div>
+        </div>
+
+        <footer class="home-footer">
+          <p>Media Pembelajaran Interaktif Siswa SMK Jurusan Teknik Jaringan Komputer & Telekomunikasi</p>
+        </footer>
+      </div>
+    </section>
+
+    <section id="screen-auth" class="screen">
+      <div class="card card-center modal-like-card auth-card">
+        <h2 class="card-title">Masuk ke EDUEST</h2>
+        <p class="card-desc">Masuk atau buat akun untuk menyimpan progres petualanganmu.</p>
+
+        <div class="auth-tabs" role="tablist">
+          <button type="button" class="auth-tab active" data-auth-tab="login" role="tab">Masuk</button>
+          <button type="button" class="auth-tab" data-auth-tab="register" role="tab">Daftar</button>
+        </div>
+
+        <p id="auth-error" class="auth-error hidden" role="alert"></p>
+
+        <form id="form-login" class="identity-form" autocomplete="on">
+          <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" class="form-control" required maxlength="20" autocomplete="username" autocapitalize="none">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Kata Sandi</label>
+            <input type="password" id="login-password" class="form-control" required maxlength="40" autocomplete="current-password">
+          </div>
+          <div class="form-actions">
+            <button type="button" id="btn-auth-home" class="btn btn-outline btn-3d">Beranda</button>
+            <button type="submit" class="btn btn-primary btn-3d">Masuk</button>
+          </div>
+        </form>
+
+        <form id="form-register" class="identity-form hidden" autocomplete="on">
+          <div class="form-group">
+            <label for="reg-nama">Nama Lengkap <span class="req">*</span></label>
+            <input type="text" id="reg-nama" class="form-control" placeholder="Contoh: Pratama Ardiansyah" required maxlength="50" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="reg-kelas">Kelas <span class="req">*</span></label>
+            <input type="text" id="reg-kelas" class="form-control" placeholder="Contoh: X TJKT 1" required maxlength="25">
+            <div class="quick-class-chips">
+              <span class="class-chip" data-val="X TJKT 1">X TJKT 1</span>
+              <span class="class-chip" data-val="X TJKT 2">X TJKT 2</span>
+              <span class="class-chip" data-val="X TJKT 3">X TJKT 3</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reg-absen">Nomor Absen <span class="opt">(Opsional)</span></label>
+            <input type="number" id="reg-absen" class="form-control" placeholder="Contoh: 18" min="1" max="50">
+          </div>
+          <div class="form-group">
+            <label for="reg-username">Username <span class="req">*</span></label>
+            <input type="text" id="reg-username" class="form-control" placeholder="3-20 karakter, tanpa spasi" required maxlength="20" autocomplete="username" autocapitalize="none">
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Kata Sandi <span class="req">*</span></label>
+            <input type="password" id="reg-password" class="form-control" placeholder="Minimal 4 karakter" required maxlength="40" autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label id="reg-char-label">Karakter petualang</label>
+            <div class="reg-char-grid" id="reg-char-grid" role="radiogroup" aria-labelledby="reg-char-label" data-keep-emoji></div>
+            <small class="reg-char-desc" id="reg-char-desc"></small>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="btn-auth-home-2" class="btn btn-outline btn-3d">Beranda</button>
+            <button type="submit" class="btn btn-primary btn-3d">Buat Akun</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BAGIAN 3: MENU PILIHAN (DASHBOARD HUB)
+    =========================================== -->
+    <section id="screen-menu" class="screen">
+      <div class="menu-container">
+        <!-- Top Navigation / Status Header -->
+        <header class="hub-header">
+          <div class="user-profile-badge">
+            <div class="avatar-circle" id="user-avatar-initial">S</div>
+            <div class="user-profile-info">
+              <div class="user-greeting"><span id="display-user-name">Siswa</span></div>
+              <div class="user-class-label" id="display-user-class">X TJKT 1</div>
+            </div>
+          </div>
+
+          <div class="hub-stats-row">
+            <div class="stat-pill stat-hearts" title="Nyawa saat ini">
+              <span class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="#ef4444" aria-hidden="true"><path d="M12 21s-8-5.3-8-11a4.6 4.6 0 018-3 4.6 4.6 0 018 3c0 5.7-8 11-8 11z"/></svg></span>
+              <span id="display-user-hearts" class="stat-val">3/3</span>
+            </div>
+            <div class="stat-pill stat-points" title="Total Poin Akumulasi">
+              <span class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fbbf24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.3l-5.9 3.2 1.2-6.5L2.5 9.4l6.6-.9z"/></svg></span>
+              <span id="display-user-points" class="stat-val">0</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Progress Overview Banner -->
+        <div class="overall-progress-card">
+          <div class="progress-title-row">
+            <span class="progress-label">Progres petualangan</span>
+            <span id="display-levels-progress-text" class="progress-count">0 dari 5 Level Lulus</span>
+          </div>
+          <div class="progress-bar-track">
+            <div id="display-overall-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Two Big Action Cards -->
+        <div class="hub-cards-grid">
+          <div class="hub-card card-materi" id="btn-open-materials">
+            <div class="hub-card-glow"></div>
+            <div class="hub-card-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20"/></svg></div>
+            <div class="hub-card-badge">5 bab belajar</div>
+            <h3 class="hub-card-title">Baca materi</h3>
+            <p class="hub-card-desc">Pelajari pengertian, klasifikasi hardware, software, dan hubungan keduanya secara mendalam.</p>
+            <div class="hub-card-btn">
+              <span>Buka materi</span> <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </div>
+
+          <div class="hub-card card-game" id="btn-open-gamemap">
+            <div class="hub-card-glow"></div>
+            <div class="hub-card-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 10.5v4M5 12.5h4M16 11.5h.01M18.5 14h.01"/></svg></div>
+            <div class="hub-card-badge" id="menu-game-status-badge">Zona 1 Terbuka</div>
+            <h3 class="hub-card-title">Mulai game</h3>
+            <p class="hub-card-desc">Jelajahi dunia 2D top-down, datangi titik soal, dan kalahkan Boss Challenge</p>
+            <div class="hub-card-btn">
+              <span>Masuk dunia 2D</span> <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Access Bottom Actions -->
+        <div class="hub-footer-actions">
+          <button id="btn-menu-home" class="btn btn-outline btn-3d">Beranda</button>
+          <button id="btn-menu-howto" class="btn btn-outline btn-3d">Cara bermain</button>
+          <button id="btn-menu-leaderboard" class="btn btn-secondary btn-3d">Papan peringkat</button>
+          <button id="btn-menu-logout" class="btn btn-outline btn-3d">Keluar</button>
+          <button id="btn-menu-reset-progress" class="btn btn-danger-soft">Reset progres</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BAGIAN 4: ISI MATERI PEMBELAJARAN
+    =========================================== -->
+    <section id="screen-materials" class="screen">
+      <div class="materials-container">
+        <header class="materials-header">
+          <button id="btn-materials-back" class="btn btn-outline btn-sm btn-3d">Kembali ke Menu</button>
+          <button id="btn-materials-home" class="btn btn-outline btn-sm btn-3d">Beranda</button>
+          <h2 class="materials-header-title">Modul Materi Komputer</h2>
+          <button id="btn-materials-play-direct" class="btn btn-primary btn-sm btn-3d">Langsung Main</button>
+        </header>
+
+        <!-- Chapter Nav Tabs -->
+        <nav class="chapter-tabs-nav" id="chapter-tabs-container">
+          <!-- Injected via JavaScript -->
+        </nav>
+
+        <!-- Active Chapter Viewer -->
+        <article class="chapter-view-card">
+          <div class="chapter-meta-tag">
+            <span id="mat-chapter-badge">BAB 1</span>
+            <span id="mat-chapter-level-hint">Materi Persiapan Zona 1</span>
+          </div>
+
+          <h3 id="mat-chapter-title" class="chapter-main-title">Memuat Judul Materi...</h3>
+
+          <div id="mat-chapter-body" class="chapter-body-content">
+            <!-- Parsed Markdown / Content rendered here -->
+          </div>
+
+          <!-- Bottom Navigation inside chapter -->
+          <footer class="chapter-footer-nav">
+            <button id="btn-mat-prev" class="btn btn-secondary btn-3d">Bab Sebelumnya</button>
+            <button id="btn-mat-play-this" class="btn btn-primary btn-3d">Mainkan Zona Ini</button>
+            <button id="btn-mat-next" class="btn btn-secondary btn-3d">Bab Berikutnya</button>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BAGIAN 5: DUNIA PETUALANGAN 2D (TOP-DOWN GIMKIT STYLE)
+    =========================================== -->
+    <section id="screen-world" class="screen screen-world-fullscreen">
+      <!-- 2D Canvas Viewport -->
+      <canvas id="world-canvas"></canvas>
+
+      <!-- HUD Top Bar Overlay -->
+      <div class="world-hud-top">
+        <div class="hud-left">
+          <div class="hud-stat-pill hud-hearts" title="Nyawa Tersisa">
+            <span class="hud-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="#ef4444" aria-hidden="true"><path d="M12 21s-8-5.3-8-11a4.6 4.6 0 018-3 4.6 4.6 0 018 3c0 5.7-8 11-8 11z"/></svg></span>
+            <span id="world-hud-hearts" class="hud-val">3</span>
+          </div>
+          <div class="hud-stat-pill hud-points" title="Total Poin">
+            <span class="hud-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fbbf24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.3l-5.9 3.2 1.2-6.5L2.5 9.4l6.6-.9z"/></svg></span>
+            <span id="world-hud-points" class="hud-val">0</span>
+          </div>
+          <div class="hud-stat-pill hud-keys hidden" id="world-hud-keys" title="Kunci Dipegang">
+            <span class="hud-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2M16 7l3 3M14 9l2 2"/></svg></span>
+            <span id="world-hud-keys-count" class="hud-val">0</span>
+          </div>
+          <div class="hud-zone-badge" id="world-hud-zone-badge">
+            <span id="world-hud-zone-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5M12 3l-6 8h3l-5 7h16l-5-7h3z"/></svg></span>
+            <span id="world-hud-zone-name">Zona 1: Desa Komputer</span>
+          </div>
+          <div class="hud-speed-pill hidden" id="world-hud-timed-badge" title="Level Tantangan Waktu">
+            Speed Round
+          </div>
+        </div>
+
+        <div class="hud-center">
+          <div class="hud-progress-info">
+            <span id="world-hud-q-counter">Soal 0 / 5</span>
+            <span class="hud-overall-info" id="world-hud-overall-counter">Zona 1/5</span>
+          </div>
+          <div class="hud-progress-track">
+            <div id="world-hud-progress-fill" class="hud-progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <button id="btn-world-minimap" class="hud-btn-icon" title="Buka/Tutup Peta Mini (M)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg></button>
+          <button id="btn-world-tutorial" class="hud-btn-icon" title="Bantuan & Petunjuk Kontrol"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3M12 17h.01"/></svg></button>
+          <button id="btn-world-mute" class="hud-btn-icon" title="Nyalakan/Matikan Suara">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          </button>
+          <button id="btn-world-exit" class="hud-btn-danger" title="Keluar ke Menu">Menu</button>
+          <button id="btn-world-home" class="hud-btn-danger" title="Kembali ke Beranda" style="background: rgba(43, 111, 209, 0.95); border-color: #8ab8f5; box-shadow: 0 4px 0 #173f7d;">Beranda</button>
+        </div>
+      </div>
+
+      <!-- Floating Interaction Prompt (Near Station or Gate) -->
+      <div id="world-interact-prompt" class="world-interact-prompt hidden">
+        <span class="prompt-key" id="world-prompt-key">[E]</span>
+        <span class="prompt-text" id="world-prompt-text">Jawab Soal</span>
+      </div>
+
+      <!-- Minimap Container Overlay -->
+      <div id="world-minimap-card" class="world-minimap-container hidden">
+        <div class="minimap-header">
+          <span>Peta Dunia 2D</span>
+          <button id="btn-close-minimap" class="btn-minimap-close" title="Tutup (Esc)">&times;</button>
+        </div>
+        <canvas id="world-minimap-canvas" width="260" height="130"></canvas>
+        <div class="minimap-legend">
+          <span><span class="dot dot-player"></span> Karakter</span>
+          <span><span class="dot dot-active"></span> Soal Aktif</span>
+          <span><span class="dot dot-done"></span> Selesai</span>
+          <span><span class="dot dot-wrong"></span> Salah <svg class="ico ico-bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg></span>
+          <span><span class="dot dot-locked"></span> Kunci</span>
+        </div>
+      </div>
+
+      <!-- Virtual Touch Controls for Mobile Devices -->
+      <div id="mobile-touch-controls" class="mobile-touch-controls">
+        <!-- Virtual Joystick (Bottom Left) -->
+        <div id="virtual-joystick-wrap" class="virtual-joystick-wrap">
+          <div id="virtual-joystick-base" class="virtual-joystick-base">
+            <div id="virtual-joystick-thumb" class="virtual-joystick-thumb"></div>
+          </div>
+        </div>
+
+        <!-- Virtual Action Button (Bottom Right) -->
+        <div class="virtual-action-wrap">
+          <button id="virtual-action-btn" class="virtual-action-btn btn-3d" aria-label="Aksi Interaksi">
+            <span class="action-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg></span>
+            <span class="action-label">AKSI</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PANEL SOAL MODAL (GIMKIT STYLE ATAS DUNIA)
+    =========================================== -->
+    <div id="modal-quiz-panel" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="quiz-container quiz-modal-card">
+        <!-- Quiz HUD Header -->
+        <header class="quiz-header">
+          <div class="quiz-level-badge" id="quiz-level-label">LEVEL 1</div>
+          
+          <div class="quiz-hud-center">
+            <div class="quiz-question-counter" id="quiz-question-num">Soal 1 / 5</div>
+            <div class="quiz-progress-track">
+              <div id="quiz-progress-fill" class="quiz-progress-fill" style="width: 20%;"></div>
+            </div>
+          </div>
+
+          <div class="quiz-hud-right">
+            <div class="hud-hearts" id="quiz-hearts-display" title="Nyawa Tersisa">
+              <span class="heart-icon active">❤️</span>
+              <span class="heart-icon active">❤️</span>
+              <span class="heart-icon active">❤️</span>
+            </div>
+            <div class="hud-score" id="quiz-score-display">⭐ 0</div>
+          </div>
+        </header>
+
+        <!-- Timer Bar (Displayed if level has timer > 0) -->
+        <div id="quiz-timer-container" class="quiz-timer-container hidden">
+          <div class="quiz-timer-label">
+            <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> WAKTU TERSISA:</span>
+            <span id="quiz-timer-countdown">15s</span>
+          </div>
+          <div class="quiz-timer-bar-track">
+            <div id="quiz-timer-bar-fill" class="quiz-timer-bar-fill"></div>
+          </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="quiz-card" id="quiz-question-card">
+          <!-- Optional Question Image (Rendered dynamically, no broken icon if empty) -->
+          <div id="quiz-image-wrap" class="quiz-image-wrap hidden"></div>
+
+          <div class="quiz-question-text" id="quiz-question-text">
+            Memuat pertanyaan...
+          </div>
+        </div>
+
+        <!-- 4 Gimkit-Style Chunky Colorful Option Buttons -->
+        <div class="quiz-options-grid" id="quiz-options-grid">
+          <button class="quiz-btn opt-red btn-3d" data-index="0">
+            <span class="opt-shape">▲</span>
+            <span class="opt-label" id="opt-text-0">Pilihan A</span>
+          </button>
+          <button class="quiz-btn opt-blue btn-3d" data-index="1">
+            <span class="opt-shape">■</span>
+            <span class="opt-label" id="opt-text-1">Pilihan B</span>
+          </button>
+          <button class="quiz-btn opt-yellow btn-3d" data-index="2">
+            <span class="opt-shape">●</span>
+            <span class="opt-label" id="opt-text-2">Pilihan C</span>
+          </button>
+          <button class="quiz-btn opt-green btn-3d" data-index="3">
+            <span class="opt-shape">★</span>
+            <span class="opt-label" id="opt-text-3">Pilihan D</span>
+          </button>
+        </div>
+
+        <!-- Footer Notice -->
+        <div class="quiz-footer">
+          <span class="quiz-freeze-notice"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Dunia petualangan dibekukan selama menjawab soal.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         PEMBAHASAN SOAL MODAL (FEEDBACK SOAL)
+         Konten dirender 100% dinamis dan bersih oleh GameController.renderPanelHasil()
+    =========================================== -->
+    <div id="modal-feedback" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="feedback-card" id="feedback-card">
+        <!-- Dirender secara dinamis oleh GameController.renderPanelHasil() -->
+      </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL PRATINJAU SOAL TERJAWAB (PREVIEW MODE)
+    =========================================== -->
+    <div id="modal-preview-question" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="feedback-card preview-card">
+        <div class="feedback-header preview-header">
+          <div class="feedback-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20"/></svg></div>
+          <div class="feedback-title-group">
+            <h3 class="feedback-status-title">Pratinjau Soal Terjawab <svg class="ico ico-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg></h3>
+            <div class="feedback-score-gain" style="color: #10b981;">Sudah Berhasil Diselesaikan</div>
+          </div>
+        </div>
+
+        <div class="quiz-card" style="margin-bottom: 14px; background: rgba(15, 23, 42, 0.6);">
+          <div class="quiz-question-text" id="preview-question-text">
+            Memuat pertanyaan...
+          </div>
+        </div>
+
+        <div class="preview-options-list" id="preview-options-list">
+          <!-- 4 Options with correct one highlighted -->
+        </div>
+
+        <div class="feedback-explanation-box" style="margin-top: 14px;">
+          <div class="exp-title">
+            <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V18h6v-1.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg> Pembahasan Lengkap:</span>
+          </div>
+          <div class="exp-content" id="preview-explanation-text">
+            Penjelasan materi untuk soal ini...
+          </div>
+        </div>
+
+        <div class="feedback-actions" style="margin-top: 18px;">
+          <button id="btn-close-preview" class="btn btn-primary btn-3d btn-lg btn-block">Tutup Pratinjau (Esc)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         GAME OVER MODAL (NYAWA HABIS = 0)
+    =========================================== -->
+    <div id="modal-game-over" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="gameover-card">
+        <div class="gameover-icon">💔</div>
+        <h2 class="gameover-title">GAME OVER!</h2>
+        <p class="gameover-desc" id="gameover-desc-text">Nyawa habis! 💔 Kamu mulai lagi dengan 3 nyawa.</p>
+        
+        <div class="gameover-tips-box">
+          <strong><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V18h6v-1.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg> Aturan Reset:</strong> Saat mengulang level, nyawa dikembalikan menjadi <strong>3 ❤️</strong>. Karakter kembali ke titik awal zona, semua soal level ini direset (<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>), dan posisi diacak ulang. Progres level yang sudah lulus sebelumnya tetap tersimpan aman!
+        </div>
+
+        <div class="gameover-actions">
+          <button id="btn-gameover-retry" class="btn btn-primary btn-3d btn-lg">Ulangi Level ( x3)</button>
+          <button id="btn-gameover-materials" class="btn btn-secondary btn-3d btn-lg">Baca Materi Lagi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         LAYAR HASIL LEVEL (LEVEL RESULT MODAL / SCREEN)
+    =========================================== -->
+    <div id="modal-level-result" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="result-container">
+        <div class="result-card">
+          <div class="result-badge-top" id="result-badge-status">ZONA LULUS! <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></div>
+          <h2 class="result-title" id="result-level-title">Zona 1 Tuntas</h2>
+
+          <!-- Star Rating -->
+          <div class="result-stars" id="result-stars-container">
+            <span class="star-item">⭐</span>
+            <span class="star-item">⭐</span>
+            <span class="star-item">⭐</span>
+          </div>
+
+          <div class="result-life-bonus-banner hidden" id="result-life-bonus-banner">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg> <strong>LEVEL LULUS!</strong> +3 ❤️ Bonus Nyawa Ditambahkan!
+          </div>
+
+          <div class="result-perfect-banner hidden" id="result-perfect-banner">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg> <strong>SEMPURNA! ⭐ Selesai Tanpa Salah!</strong> <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><br>
+            <span class="perfect-sub">Kamu mendapatkan bonus tambahan +200 Poin!</span>
+          </div>
+
+          <div class="gate-unlocked-banner" id="gate-unlocked-banner">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg> <strong>GERBANG TERBUKA!</strong> Jalur menuju zona berikutnya kini dapat kamu masuki!
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="result-stats-grid">
+            <div class="result-stat-card">
+              <span class="res-stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+              <span class="res-stat-val" id="res-stat-accuracy">5/5</span>
+              <span class="res-stat-label">Jawaban Benar</span>
+            </div>
+            <div class="result-stat-card">
+              <span class="res-stat-icon">❤️</span>
+              <span class="res-stat-val" id="res-stat-hearts">3</span>
+              <span class="res-stat-label">Nyawa Tersisa</span>
+            </div>
+            <div class="result-stat-card">
+              <span class="res-stat-icon">⭐</span>
+              <span class="res-stat-val" id="res-stat-level-score">+500</span>
+              <span class="res-stat-label">Poin Level Ini</span>
+            </div>
+            <div class="result-stat-card">
+              <span class="res-stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></span>
+              <span class="res-stat-val" id="res-stat-total-score">1.250</span>
+              <span class="res-stat-label">Total Poin</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="result-actions">
+            <button id="btn-result-continue-walk" class="btn btn-primary btn-3d btn-lg">Lanjut Berjalan di Dunia</button>
+            <button id="btn-result-retry" class="btn btn-secondary btn-3d">Main Ulang Zona Ini</button>
+            <button id="btn-result-to-materials" class="btn btn-outline btn-3d">Baca Materi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         LAYAR KEMENANGAN AKHIR (VICTORY MODAL)
+    =========================================== -->
+    <div id="modal-victory-final" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="victory-card">
+        <div class="victory-crown"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l4 4 5-7 5 7 4-4-2 12H5z"/></svg></div>
+        <h2 class="victory-title">PETUALANGAN SELESAI!</h2>
+        <div class="victory-subtitle">Selamat, Kamu Resmi Menjadi Master Hardware & Software TJKT!</div>
+        
+        <div class="victory-cert-box">
+          <div class="cert-name" id="victory-student-name">Nama Siswa</div>
+          <div class="cert-class" id="victory-student-class">X TJKT 1</div>
+          <div class="cert-score-label">Total Skor Akhir:</div>
+          <div class="cert-score-num" id="victory-final-score">3.500 Poin</div>
+          <div class="cert-badge">LULUS FASE E DENGAN PREDIKAT MASTER <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></div>
+        </div>
+
+        <div class="victory-actions">
+          <button id="btn-victory-leaderboard" class="btn btn-primary btn-3d btn-lg">Cek Papan Peringkat</button>
+          <button id="btn-victory-menu" class="btn btn-secondary btn-3d">Kembali ke Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL TUTORIAL & BANTUAN DUNIA
+    =========================================== -->
+    <div id="modal-world-tutorial" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="tutorial-card">
+        <div class="tutorial-header">
+          <div class="tutorial-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16.2 7.8l-2.1 6.3-6.3 2.1 2.1-6.3z"/></svg></div>
+          <h3>Cara Bermain</h3>
+          <button id="btn-close-tutorial" class="btn-icon-close" aria-label="Tutup">&times;</button>
+        </div>
+
+        <div class="tutorial-body">
+          <div class="tutorial-section">
+            <h4><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 10.5v4M5 12.5h4M16 11.5h.01M18.5 14h.01"/></svg> Cara Menggerakkan Karakter:</h4>
+            <ul>
+              <li><strong>Laptop / Komputer:</strong> Gunakan tombol panah (<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>) atau <strong>WASD</strong> pada keyboard.</li>
+              <li><strong>HP / Tablet:</strong> Gunakan <strong>Virtual Joystick</strong> di pojok kiri bawah layar.</li>
+            </ul>
+          </div>
+
+          <div class="tutorial-section">
+            <h4><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg> Cara Berinteraksi & Menjawab Soal:</h4>
+            <ul>
+              <li>Dekati Titik Soal yang sedang <strong>aktif dan menyala</strong>.</li>
+              <li>Tekan tombol <strong>E</strong> atau <strong>Spasi</strong> (Laptop), atau ketuk tombol <strong>AKSI</strong> (HP).</li>
+              <li>Titik soal wajib dikerjakan <strong>BERURUTAN</strong> (Soal 1 &rarr; Soal 2 &rarr; dst). Titik terkunci (<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>) tidak bisa dibuka sebelum giliran!</li>
+            </ul>
+          </div>
+
+          <div class="tutorial-section">
+            <h4><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3 21h18M14 12h.01"/></svg> Gerbang Antar Zona & Aturan Nyawa:</h4>
+            <ul>
+              <li>Gerbang menuju zona berikutnya hanya terbuka jika <strong>SEMUA soal di zona ini telah dijawab dan kamu LULUS</strong>!</li>
+              <li>Kamu mulai dengan <strong>3 ❤️ Nyawa</strong> yang terbawa antar zona.</li>
+              <li>Jawaban salah atau waktu habis = <strong>-1 ❤️</strong>.</li>
+              <li>Selesaikan zona tanpa satu pun salah (<strong>PERFECT</strong>) untuk bonus <strong>+200 poin</strong> dan 3 bintang.</li>
+              <li>Lulus Zona 1 sampai 4 untuk pertama kali memberi <strong>+3 nyawa</strong>, hanya sekali per zona.</li>
+              <li>Jika nyawa habis (<strong>0</strong>), zona diulang dengan 3 nyawa. Zona yang sudah lulus tetap tersimpan.</li>
+            </ul>
+          </div>
+
+          <div class="tutorial-section">
+            <h4>Fungsi Fitur:</h4>
+            <ul>
+              <li><strong>Baca Materi:</strong> pelajari 5 bab sebelum bermain. Soal di game diambil dari materi ini.</li>
+              <li><strong>Mulai Game:</strong> jelajahi dunia 2D, jawab soal di setiap titik, lalu buka gerbang zona berikutnya.</li>
+              <li><strong>Pembahasan:</strong> setelah menjawab, penjelasan jawaban benar selalu ditampilkan, termasuk saat jawabanmu salah.</li>
+              <li><strong>Speed Round (Zona 4):</strong> ada batas waktu per soal. Waktu habis dihitung salah.</li>
+              <li><strong>Peta Mini (M)</strong> menunjukkan titik soal. <strong>Papan Peringkat</strong> mengurutkan siswa berdasarkan total poin.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tutorial-actions">
+          <button id="btn-tutorial-ok" class="btn btn-primary btn-3d btn-block">Saya Mengerti, Ayo Main!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         BAGIAN 7: PAPAN PERINGKAT (LEADERBOARD)
+    =========================================== -->
+    <section id="screen-leaderboard" class="screen">
+      <div class="leaderboard-container">
+        <header class="leaderboard-header">
+          <button id="btn-leaderboard-back" class="btn btn-outline btn-sm btn-3d">Kembali</button>
+          <h2 class="leaderboard-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg> Papan Peringkat Petualang</h2>
+          <button id="btn-leaderboard-home" class="btn btn-outline btn-sm btn-3d">Beranda</button>
+        </header>
+
+        <div class="leaderboard-card">
+          <div class="leaderboard-intro">
+            Peringkat tertinggi siswa berdasarkan akumulasi poin petualangan EDUEST SMK TJKT.
+          </div>
+
+          <div class="leaderboard-table-responsive">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th style="width: 60px;">Pos</th>
+                  <th>Nama Petualang</th>
+                  <th>Kelas</th>
+                  <th>Level Maks</th>
+                  <th style="text-align: right;">Total Poin</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PANEL GURU (TEACHER CMS & ADMIN)
+    =========================================== -->
+    <!-- PIN Gate Modal -->
+    <div id="modal-teacher-pin" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="pin-card">
+        <div class="pin-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+        <h3 class="pin-title">Akses Panel Guru</h3>
+        <p class="pin-desc">Masukkan PIN guru untuk mengelola materi dan soal pembelajaran.</p>
+        
+        <div class="pin-input-group">
+          <input type="password" id="input-teacher-pin" class="form-control pin-input" maxlength="8" placeholder="PIN guru" autocomplete="off">
+        </div>
+        <p id="pin-error-msg" class="pin-error hidden">PIN salah! Silakan coba lagi.</p>
+
+        <div class="pin-actions">
+          <button id="btn-teacher-pin-cancel" class="btn btn-outline btn-3d">Batal</button>
+          <button id="btn-teacher-pin-submit" class="btn btn-primary btn-3d">Masuk</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teacher Panel Dashboard -->
+    <section id="screen-teacher" class="screen">
+      <div class="teacher-container">
+        <header class="teacher-header">
+          <div class="teacher-header-left">
+            <span class="badge-teacher">Panel Pengajar</span>
+            <h2 class="teacher-title">Pusat Kelola Eduest TJKT</h2>
+          </div>
+          <button id="btn-teacher-home" class="btn btn-outline btn-sm btn-3d">Beranda</button>
+          <button id="btn-teacher-exit" class="btn btn-outline btn-sm btn-3d">Keluar Panel Guru</button>
+        </header>
+
+        <!-- Navigation Tabs in Teacher Panel -->
+        <div class="teacher-tabs">
+          <button class="teacher-tab-btn active" data-tab="tab-kelola-materi">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20"/></svg> Kelola Materi (5 Bab)
+          </button>
+          <button class="teacher-tab-btn" data-tab="tab-kelola-soal">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg> Kelola Bank Soal
+          </button>
+          <button class="teacher-tab-btn" data-tab="tab-pengaturan-data">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.7l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.7v-.5a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> Backup & Pengaturan
+          </button>
+        </div>
+
+        <!-- ================= TAB 1: KELOLA MATERI ================= -->
+        <div id="tab-kelola-materi" class="teacher-tab-content active">
+          <div class="teacher-card">
+            <div class="chapter-selector-bar">
+              <label for="select-teacher-chapter"><strong>Pilih Bab Materi untuk Diedit:</strong></label>
+              <select id="select-teacher-chapter" class="form-control">
+                <option value="1">Bab 1: Pengertian Hardware & Software</option>
+                <option value="2">Bab 2: Jenis-Jenis Hardware Komputer</option>
+                <option value="3">Bab 3: Jenis-Jenis Software Komputer</option>
+                <option value="4">Bab 4: Hubungan Hardware & Software</option>
+                <option value="5">Bab 5: Rangkuman & Tips Boss Challenge</option>
+              </select>
+            </div>
+
+            <div class="materi-edit-form">
+              <div class="form-group">
+                <label for="teacher-chapter-title">Judul Bab:</label>
+                <input type="text" id="teacher-chapter-title" class="form-control" placeholder="Judul Bab...">
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-with-guide">
+                  <label for="teacher-chapter-content">Isi Materi Pembelajaran:</label>
+                  <span class="format-hint">Format: Baris kosong = Paragraf baru &bull; <code>- </code> = Poin daftar &bull; <code>**teks**</code> = Tebal &bull; <code>[gambar: ID_atau_URL]</code> = Gambar</span>
+                </div>
+                <div class="material-editor-toolbar" style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+                  <button type="button" id="btn-insert-material-img" class="btn btn-outline btn-sm btn-3d">Sisipkan Gambar</button>
+                  <button type="button" id="btn-open-image-library" class="btn btn-outline btn-sm btn-3d">Pustaka Gambar</button>
+                  <input type="file" id="input-material-img-file" accept="image/*" class="hidden">
+                </div>
+                <textarea id="teacher-chapter-content" class="form-control textarea-materi" rows="12" placeholder="Tuliskan isi materi lengkap di sini..."></textarea>
+                
+                <div class="teacher-guide-card" style="margin-top: 12px; padding: 10px 14px; background: rgba(59, 130, 246, 0.1); border: 1px dashed rgba(96, 165, 250, 0.4); border-radius: 8px; font-size: 0.85rem; color: #cbd5e1;">
+                  <strong style="color: #60a5fa;"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V18h6v-1.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg> Panduan Gambar:</strong> Unggah file (JPEG/PNG/WebP, maks 10MB) lewat tombol atau seret file. Gambar otomatis dioptimasi dan disimpan aman di memori lokal peramban.
+                </div>
+              </div>
+
+              <div class="teacher-actions-row">
+                <button id="btn-save-chapter" class="btn btn-primary btn-3d">Simpan Perubahan Materi</button>
+                <button id="btn-preview-chapter-toggle" class="btn btn-secondary btn-3d">Buka Pratinjau</button>
+              </div>
+
+              <!-- Live Preview Container -->
+              <div id="materi-preview-box" class="materi-preview-box hidden">
+                <h4>Pratinjau Tampilan Siswa:</h4>
+                <div id="materi-preview-rendered" class="chapter-body-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 2: KELOLA SOAL ================= -->
+        <div id="tab-kelola-soal" class="teacher-tab-content">
+          <div class="teacher-card">
+            <!-- Level Selector Bar -->
+            <div class="level-config-box">
+              <div class="level-config-header">
+                <div>
+                  <label for="select-teacher-level"><strong>Pilih Level Soal:</strong></label>
+                  <select id="select-teacher-level" class="form-control select-lg">
+                    <option value="1">Level 1 - Pengenalan Dasar</option>
+                    <option value="2">Level 2 - Ragam Hardware</option>
+                    <option value="3">Level 3 - Ragam Software</option>
+                    <option value="4">Level 4 - Tantangan Waktu (Speed Round)</option>
+                    <option value="5">Level 5 - BOSS CHALLENGE</option>
+                  </select>
+                </div>
+
+                <div class="level-rules-inputs">
+                  <div class="rule-input-item">
+                    <label for="input-level-target-questions">Jumlah Soal Dimainkan:</label>
+                    <input type="number" id="input-level-target-questions" class="form-control" min="1" max="50" value="5">
+                  </div>
+                  <div class="rule-input-item">
+                    <label for="input-level-timer-sec">Timer per Soal (Detik):</label>
+                    <input type="number" id="input-level-timer-sec" class="form-control" min="0" max="120" value="0" title="0 = Tanpa Batas Waktu">
+                  </div>
+                  <button id="btn-save-level-rules" class="btn btn-secondary btn-3d" style="align-self: flex-end;">Simpan Aturan</button>
+                </div>
+              </div>
+
+              <div id="level-warning-msg" class="level-warning-banner hidden">
+                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg> Peringatan: Bank soal saat ini memiliki jumlah soal lebih sedikit dari target yang dimainkan! Harap tambah soal lagi.
+              </div>
+            </div>
+
+            <!-- Question Bank Header -->
+            <div class="bank-top-bar">
+              <div>
+                <h3 class="bank-title" id="teacher-bank-title">Daftar Soal Level 1</h3>
+                <span class="bank-count-pill" id="teacher-bank-count">5 Soal Tersedia</span>
+              </div>
+              <button id="btn-add-question" class="btn btn-primary btn-3d">Tambah Soal Baru</button>
+            </div>
+
+            <!-- Question List Container -->
+            <div class="question-list-container" id="teacher-question-list">
+              <!-- Dynamically populated cards with edit, delete, reorder -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 3: PENGATURAN & BACKUP ================= -->
+        <div id="tab-pengaturan-data" class="teacher-tab-content">
+          <div class="teacher-grid-cards">
+            <!-- Gameplay Settings Card -->
+            <div class="teacher-card">
+              <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 10.5v4M5 12.5h4M16 11.5h.01M18.5 14h.01"/></svg> Pengaturan Gameplay Petualangan 2D</h3>
+              <p>Atur aturan urutan pengerjaan soal dan rintangan di dalam peta petualangan siswa.</p>
+              
+              <div class="form-group" style="margin-top: 15px;">
+                <label for="select-teacher-q-order"><strong>Mode Urutan Titik Soal:</strong></label>
+                <select id="select-teacher-q-order" class="form-control select-lg">
+                  <option value="free">Bebas (Siswa bebas memilih titik soal di zona)</option>
+                  <option value="sequential">Berurutan (Siswa wajib mengerjakan titik soal urut)</option>
+                </select>
+                <small style="color: #94a3b8; display: block; margin-top: 4px;">Default: Bebas. Pada mode bebas, siswa dapat mengerjakan titik soal manapun yang belum selesai (<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg> atau <svg class="ico ico-bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>).</small>
+              </div>
+
+              <div class="form-group" style="margin-top: 15px;">
+                <label for="select-teacher-obstacles"><strong>Rintangan Zona (Pintu Kunci, Batu, Patroli):</strong></label>
+                <select id="select-teacher-obstacles" class="form-control select-lg">
+                  <option value="enabled">Aktif (Terdapat pintu berkunci, batu dorong, & robot patroli)</option>
+                  <option value="disabled">Nonaktif (Hanya jalur peta & dinding standar)</option>
+                </select>
+                <small style="color: #94a3b8; display: block; margin-top: 4px;">Default: Aktif. Sekitar 30-40% titik soal dapat terhalang rintangan sederhana.</small>
+              </div>
+
+              <div style="margin-top: 15px;">
+                <button id="btn-save-gameplay-settings" class="btn btn-primary btn-3d">Simpan Pengaturan Gameplay</button>
+              </div>
+            </div>
+
+            <!-- Backup & Restore Card -->
+            <div class="teacher-card">
+              <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5zM3.3 7.5L12 12.5l8.7-5M12 22V12.5"/></svg> Cadangan & Sinkronisasi Data (JSON)</h3>
+              <p>Unduh seluruh materi dan soal agar dapat dibagikan ke kelas lain atau dicadangkan.</p>
+              
+              <div class="data-actions-vertical">
+                <button id="btn-export-json" class="btn btn-secondary btn-3d">Ekspor Data ke File JSON</button>
+
+                <div class="import-file-box">
+                  <label for="input-import-json" class="btn btn-outline btn-3d" style="cursor: pointer; display: inline-block;">
+                    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg> Impor Data dari File JSON
+                  </label>
+                  <input type="file" id="input-import-json" accept=".json" style="display: none;">
+                  <span id="import-status-text" class="import-status"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reset Options Card -->
+            <div class="teacher-card">
+              <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15-6.7L3 8M3 3v5h5M3 12a9 9 0 0 0 15 6.7L21 16M16 16h5v5"/></svg> Pulihkan Data Default & Reset</h3>
+              <p>Kembalikan materi dan soal ke standar default kurikulum TJKT, atau bersihkan riwayat skor.</p>
+
+              <div class="data-actions-vertical">
+                <button id="btn-restore-default-content" class="btn btn-danger-soft">Kembalikan Seluruh Materi & Soal ke Default</button>
+                <button id="btn-reset-leaderboard-teacher" class="btn btn-danger-soft">Bersihkan Riwayat Papan Peringkat</button>
+              </div>
+            </div>
+
+            <!-- Change PIN Card -->
+            <div class="teacher-card">
+              <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2M16 7l3 3M14 9l2 2"/></svg> Keamanan Panel Guru</h3>
+              <p>Ubah PIN keamanan untuk membatasi akses edit materi dan soal.</p>
+
+              <div class="change-pin-form">
+                <div class="form-group">
+                  <label for="input-new-pin">PIN Baru (4-8 karakter):</label>
+                  <input type="password" id="input-new-pin" class="form-control" maxlength="8" placeholder="Contoh: 5678">
+                </div>
+                <button id="btn-change-pin-submit" class="btn btn-primary btn-3d">Perbarui PIN</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Form Tambah / Edit Soal -->
+    <div id="modal-question-editor" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="q-editor-card">
+        <div class="q-editor-header">
+          <h3 id="q-editor-title">Tambah Soal Baru</h3>
+          <button id="btn-close-q-editor" class="btn-icon-close" aria-label="Tutup">&times;</button>
+        </div>
+
+        <form id="form-question-editor" onsubmit="return false;">
+          <input type="hidden" id="q-edit-id" value="">
+
+          <div class="form-group">
+            <label for="q-edit-pertanyaan">Pertanyaan Soal: <span class="req">*</span></label>
+            <textarea id="q-edit-pertanyaan" class="form-control" rows="3" placeholder="Tuliskan pertanyaan kuis di sini..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Gambar Soal: <span class="opt">(Opsional - File Gambar, Drag & Drop, Paste Ctrl+V, atau URL)</span></label>
+            
+            <div id="q-dropzone" class="q-image-dropzone">
+              <div class="dropzone-prompt">
+                <span class="dropzone-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></span>
+                <span>Tarik & lepas gambar ke sini, tempel dari clipboard (<strong>Ctrl+V</strong>), atau</span>
+                <button type="button" id="btn-pick-q-img" class="btn btn-outline btn-sm btn-3d">Pilih File Komputer</button>
+                <input type="file" id="q-edit-file" accept="image/*" class="hidden">
+              </div>
+              <div id="q-image-preview-container" class="q-image-preview-container hidden">
+                <img id="q-image-preview-img" src="" alt="Pratinjau Gambar Soal">
+                <div class="q-image-preview-actions">
+                  <button type="button" id="btn-remove-q-img" class="btn btn-danger btn-sm">Hapus Gambar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-fallback-wrap" style="margin-top: 8px;">
+              <small style="color: #94a3b8; display: block; margin-bottom: 4px;">Atau masukkan ID Gambar / URL langsung:</small>
+              <input type="text" id="q-edit-gambar" class="form-control" placeholder="img_... atau https://contoh.com/gambar.jpg">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="q-edit-timer-mode">Pengaturan Waktu Soal (Timer):</label>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <select id="q-edit-timer-mode" class="form-control" style="flex: 1; min-width: 200px;">
+                <option value="level">Ikut Pengaturan Level (Default)</option>
+                <option value="none">Tanpa Batas Waktu</option>
+                <option value="custom">Atur Waktu Sendiri (Detik)</option>
+              </select>
+              <div id="q-edit-timer-sec-wrap" class="hidden" style="display: flex; align-items: center; gap: 6px;">
+                <input type="number" id="q-edit-timer-sec" class="form-control" min="5" max="180" value="15" style="width: 85px;">
+                <span style="font-size: 0.9rem; color: #cbd5e1;">detik</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="q-options-edit-grid">
+            <div class="form-group">
+              <label for="q-edit-opt-0" class="badge-opt opt-red-badge">Pilihan A (Oranye ▲): <span class="req">*</span></label>
+              <input type="text" id="q-edit-opt-0" class="form-control" placeholder="Teks Pilihan A" required>
+            </div>
+
+            <div class="form-group">
+              <label for="q-edit-opt-1" class="badge-opt opt-blue-badge">Pilihan B (Biru ■): <span class="req">*</span></label>
+              <input type="text" id="q-edit-opt-1" class="form-control" placeholder="Teks Pilihan B" required>
+            </div>
+
+            <div class="form-group">
+              <label for="q-edit-opt-2" class="badge-opt opt-yellow-badge">Pilihan C (Cokelat ●): <span class="req">*</span></label>
+              <input type="text" id="q-edit-opt-2" class="form-control" placeholder="Teks Pilihan C" required>
+            </div>
+
+            <div class="form-group">
+              <label for="q-edit-opt-3" class="badge-opt opt-green-badge">Pilihan D (Hijau ★): <span class="req">*</span></label>
+              <input type="text" id="q-edit-opt-3" class="form-control" placeholder="Teks Pilihan D" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="q-edit-kunci">Kunci Jawaban yang Benar: <span class="req">*</span></label>
+            <select id="q-edit-kunci" class="form-control select-lg">
+              <option value="0">Pilihan A (Oranye ▲)</option>
+              <option value="1">Pilihan B (Biru ■)</option>
+              <option value="2">Pilihan C (Cokelat ●)</option>
+              <option value="3">Pilihan D (Hijau ★)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="q-edit-pembahasan">Pembahasan Edukatif: <span class="req">* (Wajib diisi)</span></label>
+            <textarea id="q-edit-pembahasan" class="form-control" rows="4" placeholder="Jelaskan mengapa jawaban tersebut benar dan konsep yang berkaitan agar siswa paham..." required></textarea>
+          </div>
+
+          <div class="q-editor-actions">
+            <button type="button" id="btn-cancel-q-editor" class="btn btn-outline btn-3d">Batal</button>
+            <button type="submit" id="btn-save-q-editor" class="btn btn-primary btn-3d">Simpan Soal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Lightbox Perbesar Gambar -->
+    <div id="modal-image-lightbox" class="modal-overlay hidden" role="dialog" aria-modal="true" style="z-index: 10000;">
+      <div class="lightbox-card">
+        <button id="btn-close-lightbox" class="btn-icon-close" aria-label="Tutup" title="Tutup (Esc)">&times;</button>
+        <div class="lightbox-img-wrap">
+          <img id="lightbox-img-element" src="" alt="Perbesar Gambar">
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Pustaka Gambar (Image Library) -->
+    <div id="modal-image-library" class="modal-overlay hidden" role="dialog" aria-modal="true" style="z-index: 9999;">
+      <div class="image-library-card">
+        <div class="image-library-header">
+          <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20"/></svg> Pustaka Gambar Materi & Soal</h3>
+          <button id="btn-close-image-library" class="btn-icon-close" aria-label="Tutup" title="Tutup (Esc)">&times;</button>
+        </div>
+        <div class="image-library-toolbar">
+          <button type="button" id="btn-lib-upload" class="btn btn-primary btn-sm btn-3d">Unggah Gambar Baru</button>
+          <input type="file" id="input-lib-file" accept="image/*" class="hidden">
+          <span class="lib-count-info" id="lib-count-info">0 Gambar Tersimpan</span>
+        </div>
+        <div class="image-library-grid" id="image-library-grid">
+          <!-- Diisi secara dinamis -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast-notification" class="toast-notification hidden" role="status" aria-live="polite">
+      <span id="toast-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V18h6v-1.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg></span>
+      <span id="toast-message">Pesan notifikasi</span>
+    </div>
+
+  </div> <!-- /#app -->
+
+  <script src="icons.js"></script>
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
